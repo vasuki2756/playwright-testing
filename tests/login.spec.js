@@ -8,16 +8,15 @@ loginData.forEach((data, index) => {
 
     const loginPage = new LoginPage(page);
 
+    console.log(`Running test with: ${data.username} / ${data.password}`);
+
     await loginPage.goto();
     await loginPage.login(data.username, data.password);
 
-    if (data.expected === 'success') {
-      await expect(await loginPage.getSuccessMessage())
-        .toContainText('You logged into a secure area!');
-    } else {
-      await expect(await loginPage.getErrorMessage())
-        .toBeVisible();
-    }
+    const message = await loginPage.getFlashMessage(); // ✅ FIX HERE
+
+    await expect(message).toBeVisible();
+    await expect(message).toContainText(data.expectedMessage);
 
   });
 

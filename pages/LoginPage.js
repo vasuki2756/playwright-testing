@@ -4,8 +4,7 @@ class LoginPage {
     this.username = '#username';
     this.password = '#password';
     this.loginBtn = 'button[type="submit"]';
-    this.successMsg = '.flash.success';
-    this.errorMsg = '.flash.error';
+    this.flashMsg = '#flash'; // one locator for both success & error
   }
 
   async goto() {
@@ -16,14 +15,13 @@ class LoginPage {
     await this.page.fill(this.username, user);
     await this.page.fill(this.password, pass);
     await this.page.click(this.loginBtn);
+
+    // wait for response / UI update
+    await this.page.waitForLoadState('networkidle');
   }
 
-  async getSuccessMessage() {
-    return this.page.locator(this.successMsg);
-  }
-
-  async getErrorMessage() {
-    return this.page.locator(this.errorMsg);
+  async getFlashMessage() {
+    return this.page.locator(this.flashMsg);
   }
 }
 
