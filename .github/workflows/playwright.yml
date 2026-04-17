@@ -19,17 +19,20 @@ jobs:
       with:
         node-version: 18
 
+   
+
     - name: Install dependencies
       run: npm install
+      working-directory: playwright-project
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+      working-directory: playwright-project
 
     - name: Run tests
       run: npx playwright test
+      working-directory: playwright-project
 
-    - name: Upload HTML Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright-report
-        path: playwright-report/
+      - name : Check Files
+        run : ls -a
+        working-directory: playwright-project
