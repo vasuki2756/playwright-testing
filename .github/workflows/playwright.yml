@@ -1,38 +1,24 @@
-name: Playwright Tests
+trigger:
+- main
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+pool:
+  vmImage: 'ubuntu-latest'
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+- script: npm install
+  displayName: Install dependencies
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 18
+- script: npx playwright install --with-deps
+  displayName: Install browsers
 
-   
+- script: npx playwright test
+  displayName: Run tests
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: playwright-project
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-      working-directory: playwright-project
-
-    - name: Run tests
-      run: npx playwright test
-      working-directory: playwright-project
-
-      - name : Check Files
-        run : ls -a
-        working-directory: playwright-project
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: 'playwright-report'
+    artifactName: 'PlaywrightReport'
